@@ -68,7 +68,7 @@ It will be used to help generate a landing page and links for your work.
 Please modify **all** values on **each** branch to describe your scripts.
 
 ###### Repository name ######
-Base OMERO User Scripts repository
+Example OMERO User Scripts repository
 
 ###### Minimum version ######
 4.4
@@ -83,11 +83,11 @@ The OME Team
 Open Microscopy Environment
 
 ###### URL ######
-http://openmicroscopy.org/info/scripts
+http://github.com/openmicroscopy/omero-example-scripts
 
 ###### Email ######
 ome-devel@lists.openmicroscopy.org.uk
 
 ###### Description ######
-Example script repository to be cloned, modified, and extended.
-This text may be used on OME resources to explain your scripts.
+Example scripts which should not be used in production. They
+are, however, good starting points for writing your own scripts.
