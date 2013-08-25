@@ -1,3 +1,31 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+-----------------------------------------------------------------------------
+  Copyright (C) 2013 University of Dundee. All rights reserved.
+
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+------------------------------------------------------------------------------
+
+This script uses ImageJ to process an image Z-stack from OMERO,
+generating a series of 3D projections.
+These are then uploaded to OMERO as a new image stack.
+NB: Need to have ImageJ installed on the server and the IMAGEJPATH below
+needs to be updated to point at the jar.
+"""
 
 from omero.gateway import BlitzGateway
 from omero.rtypes import rstring, rlong, robject

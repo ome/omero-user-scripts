@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
- components/tools/OmeroPy/scripts/omero/util_scripts/Dataset_To_Plate.py
-
 -----------------------------------------------------------------------------
-  Copyright (C) 2006-2011 University of Dundee. All rights reserved.
+  Copyright (C) 2006-2013 University of Dundee. All rights reserved.
 
 
   This program is free software; you can redistribute it and/or modify
@@ -24,14 +22,6 @@
 
 This script processes images, measuring the length of ROI Lines and
 saving the results to an OMERO.table.
-
-@author Will Moore
-<a href="mailto:will@lifesci.dundee.ac.uk">will@lifesci.dundee.ac.uk</a>
-@version 4.3.2
-<small>
-(<b>Internal version:</b> $Revision: $Date: $)
-</small>
-@since 3.0-Beta4.3.2
 """
 
 import omero.scripts as scripts
@@ -174,7 +164,7 @@ saving the results to an OMERO.table.""",
     scripts.List("IDs", optional=False, grouping="2",
         description="List of Dataset IDs to convert to new Plates.").ofType(rlong(0)),
 
-    version = "4.3.2",
+    version = "4.4.8",
     authors = ["William Moore", "OME Team"],
     institutions = ["University of Dundee"],
     contact = "ome-users@lists.openmicroscopy.org.uk",
