@@ -1,0 +1,57 @@
+#!/usr/bin/env jython
+
+"""
+Example Jython script which can be dropped into
+dist/lib/scripts in order to test multiple script
+types.
+"""
+
+import omero
+# Explicit imports required by Jython 2.5
+import omero.grid.JobParams
+import omero.grid.Param
+import omero.rtypes.rint
+import omero.rtypes.rinternal
+
+
+def get_params():
+    in1 = omero.grid.Param()
+    in1.optional = False
+    in1.prototype = omero.rtypes.rint(0)
+    in1.description = "Some arbitrary integer"
+
+    out1 = omero.grid.Param()
+    out1.optional = True
+    out1.prototype = omero.rtypes.rint(0)
+    out1.description = "Always 0"
+
+    params = omero.grid.JobParams()
+    params.name = "A.jy"
+    params.version = "0.0.1"
+    params.description = "An example Jython script"
+    params.inputs = {"in1": in1}
+    params.outputs = {"out1": out1}
+    params.stdoutFormat = "text/plain"
+    params.stderrFormat = "text/plain"
+
+    return omero.rtypes.rinternal(params)
+
+c = omero.client()
+try:
+    c.createSession().detachOnDestroy()
+    parse = c.getProperty("omero.scripts.parse")
+    if len(parse) > 0:
+        # Parsing. See OmeroPy/src/omero/scripts.py
+        # for the Python implementation.
+        # =========================================
+        c.setOutput("omero.scripts.parse", get_params())
+        raise Exception("Parsing")  # Return code ignored.
+    else:
+        # Perform job
+        # =========================================
+        print "Found in1: ", c.getInput("in1")
+        print "Setting out1 to 0..."
+        c.setOutput("out1", omero.rtypes.rint(0))
+
+finally:
+    c.__del__()
