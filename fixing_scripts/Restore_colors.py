@@ -32,8 +32,8 @@ def getOriginalMetadata(img) :
     series_metadata = list()
 
     for ann in img.listAnnotations():
-      if hasattr(ann, "file") and ann.getFile().getName().startswith("original_metadata"): 
-#      if ann.getFile() and ann.getFile().getName().startswith("original_metadata"):
+      if hasattr(ann, "file") and ann._obj.ns is not None and ann._obj.ns.val == omero.constants.namespaces.NSCOMPANIONFILE and \
+                ann.getFile().getName() == omero.constants.annotation.file.ORIGINALMETADATA:
         t_file = list()
         for piece in ann.getFileInChunks():
           t_file.append(piece)
