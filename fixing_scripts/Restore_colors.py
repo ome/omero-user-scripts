@@ -85,9 +85,10 @@ def restore_image(conn, img, params) :
             tmp_ar = keyValue[0].split(' ')
             cNames[int(tmp_ar[1])] = keyValue[1]
           # LSM colors
-          if keyValue[0].startswith("DataChannel") and keyValue[0].endswith("Color"):
+          # In OMERO 5. we have DataChannel Color #2', 16711680
+          if keyValue[0].startswith("DataChannel") and "Color" in keyValue[0]:
             tmp_ar = keyValue[0].split(' ')
-            cCodes[int(tmp_ar[1].strip('#'))-1] = int(keyValue[1])
+            cCodes[int(tmp_ar[-1].strip('#'))-1] = int(keyValue[1])
 
       if cNames:
         for index, c in enumerate(img.getChannels()):
