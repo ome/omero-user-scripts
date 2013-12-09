@@ -24,12 +24,12 @@ function main
 cleanup = onCleanup(@unloadOmero);
 
 parse = c.getProperty('omero.scripts.parse');
-if isempty(parse)
+if parse.isEmpty()
     % Perform job
     % =========================================
     fprintf(1, 'Found in1: %s\n', c.getInput('in1'));
     fprintf(1, 'Setting out1 to 0...');
-    c.setOutput('out1', omero.rtypes.rint(0));
+    c.setOutput('out1', rint(0));
 else
     % Parsing. See OmeroPy/src/omero/scripts.py
     % for the Python implementation.
@@ -52,7 +52,7 @@ out1.prototype = omero.rtypes.rint(0);
 out1.description = 'Always 0';
 
 params = omero.grid.JobParams();
-params.name = 'A.jy';
+params.name = 'matlab_example.m';
 params.version = '0.0.1';
 params.description = 'An example MATLAB script';
 params.inputs = java.util.HashMap;
