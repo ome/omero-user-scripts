@@ -21,6 +21,7 @@ function main
 % 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 [c, s] = loadOmero();
+cleanup = onCleanup(@unloadOmero);
 
 parse = c.getProperty('omero.scripts.parse');
 if isempty(parse)
@@ -53,7 +54,7 @@ out1.description = 'Always 0';
 params = omero.grid.JobParams();
 params.name = 'A.jy';
 params.version = '0.0.1';
-params.description = 'An example Jython script';
+params.description = 'An example MATLAB script';
 params.inputs = java.util.HashMap;
 params.inputs.put('in1', in1);
 params.outputs = java.util.HashMap;
