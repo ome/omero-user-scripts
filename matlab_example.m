@@ -20,15 +20,14 @@ function main
 % with this program; if not, write to the Free Software Foundation, Inc.,
 % 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-c = loadOmero();
-onCleanup(@() unloadOmero());
+[c, s] = loadOmero();
 
 parse = c.getProperty('omero.scripts.parse');
 if isempty(parse)
     % Perform job
     % =========================================
-    fprintf('Found in1: %s\n', c.getInput('in1'));
-    fprintf('Setting out1 to 0...');
+    fprintf(1, 'Found in1: %s\n', c.getInput('in1'));
+    fprintf(1, 'Setting out1 to 0...');
     c.setOutput('out1', omero.rtypes.rint(0));
 else
     % Parsing. See OmeroPy/src/omero/scripts.py
@@ -42,12 +41,12 @@ end
 function params = getParams
 % Generate a params object with dummy data
 in1 = omero.grid.Param();
-in1.optional = False;
+in1.optional = false;
 in1.prototype = omero.rtypes.rint(0);
 in1.description = 'Some arbitrary integer';
 
 out1 = omero.grid.Param();
-out1.optional = True;
+out1.optional = true;
 out1.prototype = omero.rtypes.rint(0);
 out1.description = 'Always 0';
 
@@ -57,7 +56,7 @@ params.version = '0.0.1';
 params.description = 'An example Jython script';
 params.inputs = java.util.HashMap;
 params.inputs.put('in1', in1);
-params.inputs = java.util.HashMap;
+params.outputs = java.util.HashMap;
 params.outputs.put('out1', out1);
 params.stdoutFormat = 'text/plain';
 params.stderrFormat = 'text/plain';
