@@ -101,20 +101,23 @@ Base OMERO User Scripts repository
 4.4
 
 ###### Maximum version ######
-5.0
+4.4
 
 ###### Owner(s) ######
-The OME Team
+Pierre Pouchin
 
 ###### Institution ######
-Open Microscopy Environment
+Génétique, Reproduction et Développement
 
 ###### URL ######
-http://openmicroscopy.org/info/scripts
+https://github.com/ppouchin/omero-user-scripts
 
 ###### Email ######
-ome-devel@lists.openmicroscopy.org.uk
+pierre.pouchin@udamail.fr
 
 ###### Description ######
-Example script repository to be cloned, modified, and extended.
-This text may be used on OME resources to explain your scripts.
+- Check_original.py allows users to check which files from the DropBox folder have not been imported, but it's only useful for users belonging to 1 group.
+- Rename_images.py allows users to batch rename images (remove the path to the DropBox folder for example). Regular expressions are not supported though.
+- Restore_colors.py fixes the colors (LUT) for LIF and LSM files in some cases where the colors were not correctly imported.
+- Restore_date.py was made to fix "acquisition date" based on file stats when it did not work properly. It may be obsolete now...
+
