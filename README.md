@@ -107,7 +107,7 @@ CAMDU Scripts
 The CAMDU Team
 
 ###### Institution ######
-Universit of Warwick
+University of Warwick
 
 ###### URL ######
 [warwick.ac.uk/camdu](https://warwick.ac.uk/fac/sci/med/research/biomedical/facilities/camdu/)
