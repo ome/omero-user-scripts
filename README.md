@@ -116,4 +116,4 @@ University of Warwick
 camdu@warwick.ac.uk
 
 ###### Description ######
-Scripts developed by the Computing and Advanced Microscopy Development Unit at the Universit of Warwick.
+Scripts developed by the Computing and Advanced Microscopy Development Unit at the University of Warwick.
