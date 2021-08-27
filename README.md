@@ -95,26 +95,25 @@ It will be used to help generate a landing page and links for your work.
 Please modify **all** values on **each** branch to describe your scripts.
 
 ###### Repository name ######
-Base OMERO User Scripts repository
+CAMDU Scripts
 
 ###### Minimum version ######
-4.4
+5.2
 
 ###### Maximum version ######
-5.0
+5.6
 
 ###### Owner(s) ######
-The OME Team
+The CAMDU Team
 
 ###### Institution ######
-Open Microscopy Environment
+Universit of Warwick
 
 ###### URL ######
-http://openmicroscopy.org/info/scripts
+[warwick.ac.uk/camdu](https://warwick.ac.uk/fac/sci/med/research/biomedical/facilities/camdu/)
 
 ###### Email ######
-ome-devel@lists.openmicroscopy.org.uk
+camdu@warwick.ac.uk
 
 ###### Description ######
-Example script repository to be cloned, modified, and extended.
-This text may be used on OME resources to explain your scripts.
+Scripts developed by the Computing and Advanced Microscopy Development Unit at the Universit of Warwick.
