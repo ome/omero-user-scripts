@@ -67,9 +67,9 @@ def planeGenerator(new_Z, C, T, Z, pixels):
     for z in range(new_Z):
         for c in range(C):
             for t in range(T):
-                for i in range(Z):
+                for i in range(Z[0], Z[1]):
                     plane = pixels.getPlane(i, c, t)
-                    if i == 0:
+                    if 'new_plane' not in locals():
                         new_plane = plane
                     else:
                         # Replace pixel values if larger
@@ -112,19 +112,25 @@ def runScript():
     images = getImages(conn, script_params)
 
     # Create new dataset if Dataset_Name is defined
-    if script_params["Dataset_Name"] != ' ':
+    if "Dataset_Name" in script_params:
         new_dataset = DatasetWrapper(conn, omero.model.DatasetI())
         new_dataset.setName(script_params["Dataset_Name"])
         new_dataset.save()
 
     for image in images:
         # Use existing data set if Dataset_Name empty, or use new one if not.
-        if script_params["Dataset_Name"] != ' ':
-            dataset = image.getParent()
-        else:
+        if "Dataset_Name" in script_params:
             dataset = new_dataset
+        else:
+            dataset = image.getParent()
 
         Z, C, T = image.getSizeZ(), image.getSizeC(), image.getSizeT()
+        if "First_Z" in script_params:
+            Z1 = [script_params["First_Z"], Z]
+        else:
+            Z1 = [1, Z]
+        if "Last_Z" in script_params:
+            Z1[1] = script_params["Last_Z"]
         new_Z = 1
         if Z != 1:
             # Get plane as numpy array
@@ -134,7 +140,7 @@ def runScript():
             desc = ("Maximum intensity projection in Z of Image ID: %s" %
                     image.getId())
             newImage = conn.createImageFromNumpySeq(planeGenerator(new_Z, C, T,
-                                                                   Z, pixels),
+                                                                   Z1, pixels),
                                                     name, new_Z, C, T,
                                                     description=desc,
                                                     dataset=dataset)
