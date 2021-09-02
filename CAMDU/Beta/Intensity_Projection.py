@@ -1,7 +1,7 @@
 # import the omero package and the omero.scripts package.
 import omero
 import omero.scripts as scripts
-from omero.gateway import BlitzGateway
+from omero.gateway import BlitzGateway, DatasetWrapper
 from omero.rtypes import rlong, rstring, robject
 import omero.util.script_utils as script_utils
 import numpy as np
@@ -27,7 +27,8 @@ def copyMetadata(conn, newImage, image):
         new_LogicChan = new_channels._obj.getLogicalChannel()
         new_LogicChan.setName(rstring(old_channels.getLabel()))
         new_LogicChan.setEmissionWave(old_channels.getEmissionWave(units=True))
-        new_LogicChan.setExcitationWave(old_channels.getExcitationWave(units=True))
+        new_LogicChan.setExcitationWave(
+            old_channels.getExcitationWave(units=True))
         conn.getUpdateService().saveObject(new_LogicChan)
 
     if newImage._prepareRenderingEngine():
@@ -89,6 +90,18 @@ def runScript():
                                          grouping="02",
                                          description="""IDs of the images to
                                          project""").ofType(rlong(0)),
+                            scripts.Int("First_Z", grouping="03", min=1,
+                                        description="First Z plane to project,\
+                                            default is first plane of stack"),
+                            scripts.Int("Last_Z", grouping="03", min=1,
+                                        description="Last Z plane to project,\
+                                            default is last plane of stack"),
+                            scripts.String("Dataset_Name", grouping="04",
+                                           description="To save projections to\
+                                               new dataset, enter it's name \
+                                               here. To save projections to \
+                                               existing dataset, leave blank"),
+                            version="0.1",
                             authors=["Laura Cooper", "CAMDU"],
                             institutions=["University of Warwick"],
                             contact="camdu@warwick.ac.uk"
@@ -98,8 +111,19 @@ def runScript():
     script_params = client.getInputs(unwrap=True)
     images = getImages(conn, script_params)
 
+    # Create new dataset if Dataset_Name is defined
+    if script_params["Dataset_Name"] != ' ':
+        new_dataset = DatasetWrapper(conn, omero.model.DatasetI())
+        new_dataset.setName(script_params["Dataset_Name"])
+        new_dataset.save()
+
     for image in images:
-        dataset = image.getParent()
+        # Use existing data set if Dataset_Name empty, or use new one if not.
+        if script_params["Dataset_Name"] != ' ':
+            dataset = image.getParent()
+        else:
+            dataset = new_dataset
+
         Z, C, T = image.getSizeZ(), image.getSizeC(), image.getSizeT()
         new_Z = 1
         if Z != 1:
