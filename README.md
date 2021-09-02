@@ -107,7 +107,7 @@ CAMDU Scripts
 The CAMDU Team
 
 ###### Institution ######
-Universit of Warwick
+University of Warwick
 
 ###### URL ######
 [warwick.ac.uk/camdu](https://warwick.ac.uk/fac/sci/med/research/biomedical/facilities/camdu/)
@@ -116,4 +116,4 @@ Universit of Warwick
 camdu@warwick.ac.uk
 
 ###### Description ######
-Scripts developed by the Computing and Advanced Microscopy Development Unit at the Universit of Warwick.
+Scripts developed by the Computing and Advanced Microscopy Development Unit at the University of Warwick.
