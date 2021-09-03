@@ -64,31 +64,7 @@ def getImages(conn, script_params):
     return images
 
 
-def tileGenerator(new_Z, C, T, Z, pixels, roi):
-    """
-    Set up generator of 2D numpy arrays, each of which is a MIP
-    To be passed to createImage method so must be order z, c, t
-    """
-    for s in roi.copyShapes():
-        if type(s) == omero.model.RectangleI:
-            x, y = s.getX().getValue(), s.getY().getValue()
-            w, h = s.getWidth().getValue(), s.getHeight().getValue()
-            for z in range(new_Z):
-                for c in range(C):
-                    for t in range(T):
-                        for i in range(Z[0], Z[1]):
-                            plane = pixels.getTile(i, c, t, (x, y, w, h))
-                            if 'new_plane' not in locals():
-                                new_plane = plane
-                            else:
-                                # Replace pixel values if larger
-                                new_plane = np.where(
-                                    np.greater(plane, new_plane), plane,
-                                    new_plane)
-                        yield new_plane
-
-
-def planeGenerator(new_Z, C, T, Z, pixels):
+def planeGenerator(new_Z, C, T, Z, pixels, roi=None):
     """
     Set up generator of 2D numpy arrays, each of which is a MIP
     To be passed to createImage method so must be order z, c, t
@@ -98,6 +74,14 @@ def planeGenerator(new_Z, C, T, Z, pixels):
             for t in range(T):
                 for i in range(Z[0], Z[1]):
                     plane = pixels.getPlane(i, c, t)
+                    if roi is not None:
+                        for s in roi.copyShapes():
+                            if type(s) == omero.model.RectangleI:
+                                x, y = int(np.floor(s.getX().getValue())), int(
+                                    np.floor(s.getY().getValue()))
+                                w, h = int(np.floor(s.getWidth().getValue())), int(
+                                    np.floor(s.getHeight().getValue()))
+                                plane = plane[x:x+w, y:y+h]
                     if 'new_plane' not in locals():
                         new_plane = plane
                     else:
@@ -168,28 +152,26 @@ def runScript():
                 # Get plane as numpy array
                 pixels = image.getPrimaryPixels()
                 if script_params["Apply_to_ROIs_only"]:
-                    roi_service = conn.getROIService()
+                    roi_service = conn.getRoiService()
                     result = roi_service.findByImage(image.getId(), None)
                     if result is not None:
-                        for roi in result:
-                            name = "%s_%s_MAX" % (image.getName(), roi.getId())
+                        for roi in result.rois:
+                            name = "%s_%s_MAX" % (
+                                image.getName(), roi.getId().getValue())
                             desc = ("Maximum intensity projection in Z of \
                                     Image ID: %s, ROI ID: %s"
                                     % (image.getId(), roi.getId()))
-                            newImage = conn.createImageFromNumpySeq(
-                                tileGenerator(1, C, T, Z1, pixels, roi), name,
-                                1, C, T, description=desc, dataset=dataset)
-                else:
-                    name = "%s_MAX" % image.getName()
-                    desc = ("Maximum intensity projection in Z of Image ID: %s"
-                            % image.getId())
-                    newImage = conn.createImageFromNumpySeq(
-                        planeGenerator(1, C, T, Z1, pixels), name, 1, C, T,
-                        description=desc, dataset=dataset)
-
+                    else:
+                        roi = None
+                        name = "%s_MAX" % image.getName()
+                        desc = ("Maximum intensity projection in Z of Image ID: %s"
+                                % image.getId())
+                newImage = conn.createImageFromNumpySeq(
+                    planeGenerator(1, C, T, Z1, pixels, roi), name, 1, C, T,
+                    description=desc, dataset=dataset)
                 copyMetadata(conn, newImage, image)
-
                 client.setOutput("New Image", robject(newImage._obj))
+
     finally:
         # Cleanup
         client.closeSession()
