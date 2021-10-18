@@ -136,7 +136,7 @@ def runScript():
             description="To save projections to new dataset, enter it's name. \
             To save projections to existing dataset, leave blank"),
 
-        version="0.1",
+        version="0.2",
         authors=["Laura Cooper", "CAMDU"],
         institutions=["University of Warwick"],
         contact="camdu@warwick.ac.uk"
@@ -196,7 +196,6 @@ def runScript():
                     desc = ("%s intensity Z projection of Image ID: \
                              %s" % (script_params["Method"],
                                     image.getId()))
-                print(Z1)
                 newImage = conn.createImageFromNumpySeq(
                     planeGenerator(1, C, T, Z1, pixels, script_params["Method"],
                                    shape), name, 1, C, T, description=desc, dataset=dataset)
