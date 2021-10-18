@@ -73,36 +73,35 @@ def getRoiShape(s):
     return shape
 
 
-def planeGenerator(Z, C, T, pixels, projection, shape=None):
+def planeGenerator(new_Z, C, T, Z, pixels, projection, shape=None):
     """
     Set up generator of 2D numpy arrays, each of which is a MIP
     To be passed to createImage method so must be order z, c, t
     """
-    for c in range(C):
-        print(c)
-        for t in range(T):
-            for z in range(Z[0], Z[1]):
-                plane = pixels.getPlane(z, c, t)
-                if shape is not None:
-                    plane = plane[shape['y']:shape['y']+shape['h'],
-                                  shape['x']:shape['x']+shape['w']]
-                if 'new_plane' not in locals():
-                    new_plane = plane
-                else:
-                    if projection == 'Maximum':
-                        # Replace pixel values if larger
-                        new_plane = np.where(np.greater(
-                            plane, new_plane), plane, new_plane)
-                    elif projection == 'Sum':
-                        new_plane = np.add(plane, new_plane)
-                    elif projection == 'Minimum':
-                        new_plane = np.where(
-                            np.less(plane, new_plane), plane, new_plane)
-                    elif projection == 'Mean':
-                        new_plane = np.mean(
-                            np.array([plane, new_plane]), axis=0)
-            print(new_plane)
-            yield new_plane
+    for z in range(new_Z):  # createImageFromNumpySeq expects Z, C, T order
+        for c in range(C):
+            for t in range(T):
+                for eachz in range(Z[0]-1, Z[1]):
+                    plane = pixels.getPlane(eachz, c, t)
+                    if shape is not None:
+                        plane = plane[shape['y']:shape['y']+shape['h'],
+                                      shape['x']:shape['x']+shape['w']]
+                    if eachz == Z[0]-1:
+                        new_plane = plane
+                    else:
+                        if projection == 'Maximum':
+                            # Replace pixel values if larger
+                            new_plane = np.where(np.greater(
+                                plane, new_plane), plane, new_plane)
+                        elif projection == 'Sum':
+                            new_plane = np.add(plane, new_plane)
+                        elif projection == 'Minimum':
+                            new_plane = np.where(
+                                np.less(plane, new_plane), plane, new_plane)
+                        elif projection == 'Mean':
+                            new_plane = np.mean(
+                                np.array([plane, new_plane]), axis=0)
+                yield new_plane
 
 
 def runScript():
@@ -163,7 +162,7 @@ def runScript():
             if "First_Z" in script_params:
                 Z1 = [script_params["First_Z"], Z]
             else:
-                Z1 = [0, Z]
+                Z1 = [1, Z]
             if "Last_Z" in script_params:
                 Z1[1] = script_params["Last_Z"]
             # Skip image if Z dimension is 1 or if given Z range is less than 1
@@ -199,7 +198,7 @@ def runScript():
                                     image.getId()))
                 print(Z1)
                 newImage = conn.createImageFromNumpySeq(
-                    planeGenerator(Z1, C, T, pixels, script_params["Method"],
+                    planeGenerator(1, C, T, Z1, pixels, script_params["Method"],
                                    shape), name, 1, C, T, description=desc, dataset=dataset)
                 copyMetadata(conn, newImage, image)
                 client.setOutput("New Image", robject(newImage._obj))
