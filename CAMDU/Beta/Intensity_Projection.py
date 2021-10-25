@@ -93,21 +93,15 @@ def planeGenerator(new_Z, C, T, Z, pixels, projection, shape=None):
                             # Replace pixel values if larger
                             new_plane = np.where(np.greater(
                                 plane, new_plane), plane, new_plane)
-                        elif projection == 'Sum':
-                            new_plane = np.add(plane, new_plane)
                         elif projection == 'Minimum':
                             new_plane = np.where(
                                 np.less(plane, new_plane), plane, new_plane)
-                        elif projection == 'Mean':
-                            new_plane = np.mean(
-                                np.array([plane, new_plane]), axis=0)
                 yield new_plane
 
 
 def runScript():
     dataTypes = [rstring('Dataset'), rstring('Image')]
-    projections = [rstring('Maximum'), rstring('Sum'), rstring('Mean'),
-                   rstring('Minimum')]
+    projections = [rstring('Maximum'), rstring('Minimum')]
     client = scripts.client(
         "Intensity_Projection.py", """Creates a new image of the selected \
         intensity projection in Z from an existing image""",
@@ -136,7 +130,7 @@ def runScript():
             description="To save projections to new dataset, enter it's name. \
             To save projections to existing dataset, leave blank"),
 
-        version="0.2",
+        version="0.3",
         authors=["Laura Cooper", "CAMDU"],
         institutions=["University of Warwick"],
         contact="camdu@warwick.ac.uk"
@@ -197,8 +191,9 @@ def runScript():
                              %s" % (script_params["Method"],
                                     image.getId()))
                 newImage = conn.createImageFromNumpySeq(
-                    planeGenerator(1, C, T, Z1, pixels, script_params["Method"],
-                                   shape), name, 1, C, T, description=desc, dataset=dataset)
+                    planeGenerator(1, C, T, Z1, pixels,
+                                   script_params["Method"], shape),
+                    name, 1, C, T, description=desc, dataset=dataset)
                 copyMetadata(conn, newImage, image)
                 client.setOutput("New Image", robject(newImage._obj))
 
